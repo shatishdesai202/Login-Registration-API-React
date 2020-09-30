@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export class SignUp extends Component {
   state = {
@@ -12,22 +14,33 @@ export class SignUp extends Component {
   };
   onSubmitForm = (event) => {
     event.preventDefault();
-    axios.post("http://localhost:3000/api/", this.state.register)
-    .then((response) => {
-      console.log(response);
-    this.setState({
-      ...this.state,
-      register: {
-        name: "",
-        email: "",
-        password: "",
-      },
-    })
-    console.log(response);
-  })
-  .catch((error) => {
-    console.log(error);
-  })
+    axios
+      .post("http://localhost:3000/api/", this.state.register)
+      .then((response) => {
+        // toast.error(response.data, {
+        //     position: toast.POSITION.TOP_LEFT
+        // });
+        debugger
+        if (response.data === "Email is Already Exist") {
+          toast.error(response.data, {
+            position: toast.POSITION.TOP_CENTER,
+          });
+        } else {
+          // debugger
+          this.setState({
+            ...this.state,
+            register: {
+              name: "",
+              email: "",
+              password: "",
+            },
+          });
+          this.props.history.push(`/`);
+        }
+      })
+      .catch((error) => {
+        toast.error(error);
+      });
   };
 
   formChangeHandler = (event) => {
@@ -58,8 +71,8 @@ export class SignUp extends Component {
         <form onSubmit={(e) => this.onSubmitForm(e)}>
           <div className="container">
             <div className="col-md-4 mb-3">
-            <h2>Registration</h2>
-              <label>Name</label>
+              <h2>Registration</h2>
+              <label style={{ fontSize: 20 }}>Name</label>
               <input
                 type="text"
                 name="name"
@@ -71,7 +84,7 @@ export class SignUp extends Component {
               />
             </div>
             <div className="col-md-4 mb-3">
-              <label>Email address</label>
+              <label style={{ fontSize: 20 }}>Email address</label>
               <input
                 type="email"
                 name="email"
@@ -83,7 +96,7 @@ export class SignUp extends Component {
               />
             </div>
             <div className="col-md-4 mb-3">
-              <label>Password</label>
+              <label style={{ fontSize: 20 }}>Password</label>
               <input
                 type="password"
                 name="password"

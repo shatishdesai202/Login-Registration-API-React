@@ -48,7 +48,7 @@ routes.post('/', async (req, res) => {
 
     const emailExist = await userModel.findOne({email: req.body.email});
 
-    if(emailExist) {return res.status(400).send('Email is Exist')};
+    if(emailExist) {return res.send('Email is Already Exist')};
 
 
     // Hash Password
